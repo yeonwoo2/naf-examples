@@ -117,12 +117,26 @@
       video: true;
       debug: true;
     "
-    environment="preset: arches; shadow: true;" 
-    keyboard-shortcuts="enterVR: true;" 
-    vr-mode-ui="enabled: true;"
-    screen-controls>
+      environment="preset: arches; shadow: true;" 
+      keyboard-shortcuts="enterVR: true;" 
+      vr-mode-ui="enabled: true;"
+      screen-controls>
 
-  
+    <a-asset-item id="booth1" src="model/booth.glb"></a-asset-item>
+    <a-asset-item id="booth2" src="model/booth.glb"></a-asset-item>
+    <a-asset-item id="booth3" src="model/booth.glb"></a-asset-item>
+    <a-asset-item id="booth4" src="model/booth.glb"></a-asset-item>
+    <a-asset-item id="booth5" src="model/booth.glb"></a-asset-item>
+    <a-asset-item id="booth6" src="model/booth.glb"></a-asset-item>
+    <a-asset-item id="grass" src="model/grass.glb"></a-asset-item>
+    <a-entity gltf-model="#booth1"></a-entity>
+    <a-entity gltf-model="#booth2" rotation="0 180 0" position="0 0 -10"></a-entity>
+    <a-entity gltf-model="#booth3" rotation="0 180 0" position="5 0 -10"></a-entity>
+    <a-entity gltf-model="#booth4" rotation="0 180 0" position="10 0 -10"></a-entity>
+    <a-entity gltf-model="#booth5" position="5 0 0"></a-entity>
+    <a-entity gltf-model="#booth6" position="10 0 0"></a-entity>
+    <a-entity gltf-model="#grass" position="4.709 -0.46 -5.214" scale="0.870 0.680 0.780"></a-entity>
+
       <a-assets>
         
         <!-- my camera -->
@@ -238,6 +252,7 @@
       // On mobile remove elements that are resource heavy
       const isMobile = AFRAME.utils.device.isMobile();
 
+      //...................모바일일때 ui....
       if (isMobile) {
         document.getElementById('screen-btn').setAttribute('stype','visibility:hidden')
       }
