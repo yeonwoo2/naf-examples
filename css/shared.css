@@ -33,6 +33,9 @@
 }
 
 /* Button */
+.actions{
+  margin-left: 100px;
+}
 
 .button{
   -webkit-appearance: none;

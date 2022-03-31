@@ -218,10 +218,10 @@
 
     </a-scene>
 
-    <!-- <div class="actions">
-      <button id="camera-btn" type="button" class="button">Hide</button>
-      <button id="screen-btn" type="button" class="button">ON</button>
-    </div> -->
+    <div class="actions">
+      <button id="camera-btn" type="button" class="button" style="visibility:visible;">Hide</button>
+      <button id="screen-btn" type="button" class="button" style="visibility:visible;">ON</button>
+    </div>
 
   
     <script>   
@@ -239,8 +239,7 @@
       const isMobile = AFRAME.utils.device.isMobile();
 
       if (isMobile) {
-        const particles = document.getElementById('particles');
-        particles.parentNode.removeChild(particles);
+        document.getElementById('screen-btn').setAttribute('stype','visibility:hidden')
       }
 
       // Define custom schema for syncing avatar color, set by random-color
@@ -257,34 +256,34 @@
         console.log("onConnect", new Date());
 
         // Handle camera button click (Off and On)
-        // cameraBtnEle.addEventListener('click', function() {
-        //   NAF.connection.adapter.enableCamera(!cameraEnabled);
-        //   cameraEnabled = !cameraEnabled;
-        //   cameraBtnEle.textContent = cameraEnabled ? 'Hide' : 'Show';
-        // });
+        cameraBtnEle.addEventListener('click', function() {
+          NAF.connection.adapter.enableCamera(!cameraEnabled);
+          cameraEnabled = !cameraEnabled;
+          cameraBtnEle.textContent = cameraEnabled ? 'Hide' : 'Show';
+        });
 
         // Handle screen button click (Off and On)
-        // screenBtnEle.addEventListener('click', function() {
+        screenBtnEle.addEventListener('click', function() {
 
-        //   if (screenEnabled) {
-        //     window.location.reload()
-        //     // NAF.connection.adapter.removeLocalMediaStream("screen");
-        //     screenEnabled = false;
-        //     screenBtnEle.textContent = 'ON';
-        //   } else {
-        //     navigator.mediaDevices.getDisplayMedia({ audio: true, video: true }).then((stream) => {
-        //       let $videoElement = document.querySelector('video#screen');
-        //         $videoElement.srcObject = stream
-        //         $videoElement.onloadedmetadata = () => {
-        //                $videoElement.play()
-        //         }
-        //       NAF.connection.adapter.addLocalMediaStream(stream, "screen");
-        //       console.log(NAF.connection.adapter.remoteClients)
-        //       screenEnabled = true;
-        //       screenBtnEle.textContent = 'OFF';
-        //     });
-        //   }
-        // });
+          if (screenEnabled) {
+            window.location.reload()
+            // NAF.connection.adapter.removeLocalMediaStream("screen");
+            screenEnabled = false;
+            screenBtnEle.textContent = 'ON';
+          } else {
+            navigator.mediaDevices.getDisplayMedia({ audio: true, video: true }).then((stream) => {
+              let $videoElement = document.querySelector('video#screen');
+                $videoElement.srcObject = stream
+                $videoElement.onloadedmetadata = () => {
+                       $videoElement.play()
+                }
+              NAF.connection.adapter.addLocalMediaStream(stream, "screen");
+              console.log(NAF.connection.adapter.remoteClients)
+              screenEnabled = true;
+              screenBtnEle.textContent = 'OFF';
+            });
+          }
+        });
       }
       
     </script>
