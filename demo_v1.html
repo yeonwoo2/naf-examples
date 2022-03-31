@@ -8,12 +8,14 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.4.0/socket.io.slim.js"></script>
     <script src="/easyrtc/easyrtc.js"></script>
     <script src="/dist/networked-aframe.js"></script>
+
     <script src="js/extended-wasd-controls.js"></script>
     <script src="js/joystick.js"></script>
 
     <script src="https://unpkg.com/aframe-randomizer-components@^3.0.1/dist/aframe-randomizer-components.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/IdeaSpaceVR/aframe-particle-system-component@master/dist/aframe-particle-system-component.min.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/gh/IdeaSpaceVR/aframe-particle-system-component@master/dist/aframe-particle-system-component.min.js"></script> -->
     <script src="/js/spawn-in-circle.component.js"></script>
+
 
     <script>
       // see issue https://github.com/networked-aframe/networked-aframe/issues/267
@@ -38,46 +40,37 @@
         return components;
       }
     </script>
+
     <script>
-      let enabledloop = true;
 
-      AFRAME.registerComponent("peers", {
-        tick: function () {
-          console.log("peers: " + easyrtc.getConnectionCount() +" "+ NAF.connection.adapter.remoteClients)
+        // need to run javascript code after a-scene entities and components are loaded
+        AFRAME.registerComponent('screen-controls', 
+        {
+            init: function () 
+            {
+                this.component = document.getElementById("player").components["extended-wasd-controls"];
+                this.joystick1 = new Joystick("stick1", 64, 8);
+                console.log("controls initialized");
+            },
 
-          // if(enabledloop && num < easyrtc.getConnectionCount()){
-          //   const pos = easyrtc.getConnectionCount()
-          //   console.log("pos" + pos)
-          //   this.el.setAttribute('position', pos*5 + ' 1 0')
-          //   enabledloop = false
-          // }
-        }
-      });
-
-      // AFRAME.registerComponent('screen-shared', {
-      //   init: function () {
-
-      //   this.el.addEventListener('click', function () {
-
-      //           console.log('Play shared screen');
-      //           navigator.mediaDevices.getDisplayMedia({ audio: true, video: true }).then(stream => {
+            tick: function(time, deltaTime)
+            {
+                // console.log( joystick1.value )
+                // console.log( this.component.movePercent )
+                this.component.movePercent.x =  this.joystick1.value.x;
+                this.component.movePercent.z = -this.joystick1.value.y;
                 
-      //           let $videoElement = document.querySelector('video#screen');
-      //           $videoElement.srcObject = stream
-      //           $videoElement.onloadedmetadata = () => {
-      //                  $videoElement.play()
-      //           }
-                
-      //        })
-      //     });
-      //   }
-      // });
+            }
+        })
+
+
     </script>
 
     <link rel="stylesheet" type="text/css" href="/css/style.css" />
     <link href="/css/scene.css" rel="stylesheet" type="text/css" />
     <link href="/css/shared.css" rel="stylesheet" type="text/css" />
     <link rel="shortcut icon" href="#">
+    <link href="/css/joystick.css" rel="stylesheet" href="text/css">
     <style>
       video{
          height: 300px;
@@ -85,114 +78,37 @@
          object-fit: cover;
          padding: 8px;
       }
-
-body
-{
-	/* disable long press in iOS? */
-	-webkit-touch-callout: none;
-}
-
-.mainUI
-{
-	border: 0px solid pink; 
-	position: fixed; 
-	top: 0px;  
-	width:99%; 
-	height:99%; 
-	z-index: 1; 
-	pointer-events: none; /* allow click-through in transparent areas */
-}
-
-.regionUI
-{
-	border: 0px solid yellow;
-	position: absolute; 
-	display: flex;
-	flex-direction: row;
-	pointer-events: none;
-}
-
-.buttonUI
-{
-	border: 0px solid lime;
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	pointer-events: auto;	
-	filter: drop-shadow(0px 0px 20px white);
-}
-
-.skyColor
-{
-	filter: hue-rotate(240deg) saturate(100%) brightness(100%) drop-shadow(0px 0px 20px white);
-}
-
-.baseColor
-{
-	filter: hue-rotate(24deg) saturate(68%) brightness(100%) drop-shadow(0px 0px 20px white);
-}
-
-.grayColor
-{
-	filter: hue-rotate(0deg) saturate(0%) brightness(100%) drop-shadow(0px 0px 20px white);
-}
    </style>
   </head>
   <body>
   
 <!-- note: by using red base images for buttons, can tint (HSV) using filter: hue-rotate(); etc. -->
 
-<div class="mainUI" id="uiDiv" oncontextmenu="false;">
+    <div class="mainUI" id="uiDiv" oncontextmenu="false;">
 
-	<!-- top-left -->
-	<div class="regionUI skyColor" style="top: 10px; left: 10px;" oncontextmenu="false;">
-	</div>
+        <!-- top-left -->
+        <div class="regionUI skyColor" style="top: 10px; left: 10px;" oncontextmenu="false;">
+        </div>
 
-	<!-- top-right -->
-	<div class="regionUI" style="top: 10px; right: 10px;">
-	</div>
+        <!-- top-right -->
+        <div class="regionUI" style="top: 10px; right: 10px;">
+        </div>
 
-	<!-- bottom-left -->
-	<div class="regionUI" style="bottom: 10px; left: 10px;">
-		<div class="buttonUI" style="width: 128px; opacity:0.80;">
-			<img src="images/joystick-base.png"/>
-			<div id="stick1" style="position: absolute; left:32px; top:32px;">
-			<img src="images/joystick-red.png"/>		
-			</div>
-		</div>
-	</div>
+        <!-- bottom-left -->
+        <div class="regionUI" style="bottom: 10px; left: 10px;">
+            <div class="buttonUI" style="width: 128px; opacity:0.80;">
+                <img src="images/joystick-base.png"/>
+                <div id="stick1" style="position: absolute; left:32px; top:32px;">
+                <img src="images/joystick-red.png"/>		
+                </div>
+            </div>
+        </div>
 
-	<!-- bottom-right -->
-	<div class="regionUI baseColor" style="bottom: 10px; right: 10px;">
-	</div>
+        <!-- bottom-right -->
+        <div class="regionUI baseColor" style="bottom: 10px; right: 10px;">
+        </div>
 
-</div>
-
-<script>
-
-	// need to run javascript code after a-scene entities and components are loaded
-	AFRAME.registerComponent('screen-controls', 
-	{
-		init: function () 
-		{
-    		this.component = document.getElementById("player").components["extended-wasd-controls"];
-    		this.joystick1 = new Joystick("stick1", 64, 8);
-    		console.log("controls initialized");
-  		},
-
-  		tick: function(time, deltaTime)
-  		{
-  			// console.log( joystick1.value )
-  			// console.log( this.component.movePercent )
-  			this.component.movePercent.x =  this.joystick1.value.x;
-  			this.component.movePercent.z = -this.joystick1.value.y;
-  			
-  		}
-	})
-
-
-</script>
-
+    </div>
 
     <a-scene networked-scene="
       room: basic;
@@ -202,8 +118,8 @@ body
       debug: true;
     "
     environment="preset: arches; shadow: true;" 
-    keyboard-shortcuts="enterVR: false;" 
-    vr-mode-ui="enabled: false;"
+    keyboard-shortcuts="enterVR: true;" 
+    vr-mode-ui="enabled: true;"
     screen-controls>
 
   
@@ -235,14 +151,6 @@ body
             </a-entity>
         </template>
 
-        <!--remote player Camera --> 
-        <!-- <template id="remote-template">
-          <a-entity class="camera">
-            <a-plane color="#FFF" width="4" height="3" position="0 .6 0" material="side: front" networked-video-source></a-plane>
-            <a-plane color="#FFF" width="4" height="3" position="0 .6 0" material="color: red; side: back"></a-plane>
-          </a-entity>
-        </template> -->
-
         <template id="shared-template">
           <a-entity class="share">
             <a-plane color="#FFF" width="5" height="3" position="0 0 0" material="side: back; color: red"></a-plane>
@@ -270,35 +178,6 @@ body
         <!-- <a-plane id="face" color="white" position="0 2.1 -2" scale="0.78 0.6 1.0" material="src: #webcam" ></a-plane> -->
       </a-entity>
 
-      <!-- local camera -->
-      <!-- <a-entity>
-        <a-video 
-          class="front"
-          material="side:front"
-          src="#webcam"
-          width="4"
-          height="3"
-          position="0 1.5 0"
-        ></a-video>
-        <a-plane
-          class="back"
-          rotation="0 180 0"
-          material="color:red;side:front"
-          width="4"
-          height="3"
-          position="0 1.5 0"
-        ></a-plane>
-        <a-entity text="value: local camera; align:center;" position="0 3.5 0" rotation="0 0 0" scale="8 8 8"></a-entity>
-      </a-entity> -->
-
-     <!-- remote camera -->
-      <!-- <a-entity id="remote" 
-        peers
-        networked="template:#remote-template;attachTemplateToLocal:false;"
-        position="5 1 0">
-        <a-entity text="value: remote camera; align:center;" position="0 3 0" rotation="0 0 0" scale="8 8 8"></a-entity>
-      </a-entity> -->
-
       <!-- shared screen -->
       <a-entity>
         <a-video
@@ -324,17 +203,6 @@ body
         position="2 4 0">
         <!-- <a-entity text="value: remote camera; align:center;" position="0 4 0" rotation="0 0 0" scale="8 8 8"></a-entity> -->
       </a-entity>
-
-      <!-- screen shared button -->
-      <!-- <a-image
-      id="screen-shared-button"
-      src="#sharedImg"
-      position="-10 1 0.5"
-      scale="0.4 0.4 1"
-      screen-shared
-      animation__mouseenter="property: scale; to: 0.67 0.67 1; dur: 300; startEvents: mouseenter"
-      animation__mouseleave="property: scale; to: 0.6 0.6 1; dur: 300; startEvents: mouseleave"
-    ></a-image> -->
 
       <!-- environmnet -->
       <a-entity position="0 0 0"
@@ -418,32 +286,6 @@ body
         //   }
         // });
       }
-
-
-        // navigator.mediaDevices.getUserMedia({ audio: true, video: true })
-        //   .then(stream => {
-        //                     let video = document.querySelector('video')
-        //                     video.srcObject = stream
-        //                     video.onloadedmetadata = () => {
-        //                         video.play()
-        //                     }
-                            
-        //                     const videoTrack = stream.getTracks().find(track => track.kind === 'video');
-
-        //                     cameraBtnEle.addEventListener('click', function() {
-        //                       if(videoTrack.enabled){
-        //                         videoTrack.enabled = false;
-        //                         NAF.connection.adapter.enableCamera(videoTrack.enabled);
-        //                         cameraBtnEle.textContent = 'Show Camera';
-        //                       } else {
-        //                         videoTrack.enabled = true;
-        //                         NAF.connection.adapter.enableCamera(videoTrack.enabled);
-        //                         cameraBtnEle.textContent = 'Hide Camera';
-        //                       }
-        //                     });
-        //                   })
-                    
-
       
     </script>
   </body>
