@@ -63,7 +63,6 @@
             }
         })
 
-
     </script>
 
     <link rel="stylesheet" type="text/css" href="/css/style.css" />
@@ -161,6 +160,8 @@
           <a-entity>
               <a-entity id="avatarhead" scale="2 2 2" gltf-model="url(https://cdn.glitch.me/80742858-b8eb-448a-83ae-391f410d322f/Monitor.gltf?v=1639597253645)" crossorigin="anonymous" networked-audio-source rotation="0 180 0">
                 <a-plane  color="white" position="0.0 0.17 0.12" scale="0.78 0.6 1.0" networked-video-source></a-plane>
+                <a-plane color="#FFF" width="2" height="1" position="0 1.5 -0.001" material="side: front" networked-video-source="streamName: screen"></a-plane>
+                <a-plane color="#FFF" width="2" height="1" position="0 1.5 -0.001" material="side: back" networked-video-source="streamName: screen"></a-plane>
               </a-entity>
             </a-entity>
         </template>
@@ -182,9 +183,7 @@
                 spawn-in-circle="radius:3"
                 camera look-controls
                 wasd-controls
-
                 extended-wasd-controls="flyEnabled: true; inputType: joystick;"
-
                 >
                 <a-cursor scale="2 2 2" color="white" opacity="0.3">
                 </a-cursor>
@@ -203,6 +202,7 @@
           position="-7 4 0"
         ></a-video>
         <a-plane
+          networked-video-interface="streamName: test"
           class="back"
           rotation="0 180 0"
           material="color:red;side:front"
@@ -212,11 +212,11 @@
         ></a-plane>
       </a-entity>
 
-      <a-entity id="share" 
+      <!-- <a-entity id="share" 
         networked="template:#shared-template;attachTemplateToLocal:false;"
         position="2 4 0">
-        <!-- <a-entity text="value: remote camera; align:center;" position="0 4 0" rotation="0 0 0" scale="8 8 8"></a-entity> -->
-      </a-entity>
+        <a-entity text="value: remote camera; align:center;" position="0 4 0" rotation="0 0 0" scale="8 8 8"></a-entity>
+      </a-entity> -->
 
       <!-- environmnet -->
       <a-entity position="0 0 0"
@@ -293,7 +293,12 @@
                        $videoElement.play()
                 }
               NAF.connection.adapter.addLocalMediaStream(stream, "screen");
-              console.log(NAF.connection.adapter.remoteClients)
+              console.log(NAF.connection.adapter.remoteClients) // 나를 제외한 peerId
+              Object.keys(NAF.connection.adapter.remoteClients).forEach((clientId) => {
+                if (easyrtc.getConnectStatus(clientId) !== easyrtc.NOT_CONNECTED) {
+                      
+                  }
+              });
               screenEnabled = true;
               screenBtnEle.textContent = 'OFF';
             });
