@@ -11,6 +11,9 @@
 
     <script src="js/extended-wasd-controls.js"></script>
     <script src="js/joystick.js"></script>
+    
+    <!-- 새로 만든 SHARED MESH COMPONENT -->
+    <script src="js/shared-screen.js"></script> 
 
     <script src="https://unpkg.com/aframe-randomizer-components@^3.0.1/dist/aframe-randomizer-components.min.js"></script>
     <!-- <script src="https://cdn.jsdelivr.net/gh/IdeaSpaceVR/aframe-particle-system-component@master/dist/aframe-particle-system-component.min.js"></script> -->
@@ -160,8 +163,8 @@
           <a-entity>
               <a-entity id="avatarhead" scale="2 2 2" gltf-model="url(https://cdn.glitch.me/80742858-b8eb-448a-83ae-391f410d322f/Monitor.gltf?v=1639597253645)" crossorigin="anonymous" networked-audio-source rotation="0 180 0">
                 <a-plane  color="white" position="0.0 0.17 0.12" scale="0.78 0.6 1.0" networked-video-source></a-plane>
-                <a-plane color="#FFF" width="2" height="1" position="0 1.5 -0.001" material="side: front" networked-video-source="streamName: screen"></a-plane>
-                <a-plane color="#FFF" width="2" height="1" position="0 1.5 -0.001" material="side: back" networked-video-source="streamName: screen"></a-plane>
+                <a-plane color="#FFF" width="2" height="1" position="0 1.5 -0.001" material="side: front" shared-screen-mesh="streamName: screen"></a-plane>
+                <a-plane color="#FFF" width="2" height="1" position="0 1.5 -0.001" material="side: back" shared-screen-mesh="streamName: screen"></a-plane>
               </a-entity>
             </a-entity>
         </template>
@@ -202,10 +205,10 @@
           position="-7 4 0"
         ></a-video>
         <a-plane
-          networked-video-interface="streamName: test"
+          id="a"
           class="back"
           rotation="0 180 0"
-          material="color:red;side:front"
+          material= "side:front"
           width="5"
           height="3"
           position="-7 4 0"
@@ -286,20 +289,17 @@
             screenEnabled = false;
             screenBtnEle.textContent = 'ON';
           } else {
-            console.log("shared screen");
+            console.log("Shared Screen !!");
+
             navigator.mediaDevices.getDisplayMedia({ audio: true, video: true }).then((stream) => {
               let $videoElement = document.querySelector('video#screen');
                 $videoElement.srcObject = stream
                 $videoElement.onloadedmetadata = () => {
                        $videoElement.play()
                 }
+                
               NAF.connection.adapter.addLocalMediaStream(stream, "screen");
-              console.log(NAF.connection.adapter.remoteClients) // 나를 제외한 peerId
-              Object.keys(NAF.connection.adapter.remoteClients).forEach((clientId) => {
-                if (easyrtc.getConnectStatus(clientId) !== easyrtc.NOT_CONNECTED) {
-                      
-                  }
-              });
+              console.log(NAF.connection.adapter.remoteClients.stream) // 나를 제외한 peerId
               screenEnabled = true;
               screenBtnEle.textContent = 'OFF';
             });
