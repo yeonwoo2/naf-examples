@@ -198,11 +198,11 @@
         ></a-video>
         <a-plane
           id="a"
-          rotation="0 180 0"
+          rotation="0 0 0"
           material= "side:front"
           width="10"
           height="6"
-          position="-10 4 0"
+          position="5 4 0"
         ></a-plane>
       </a-entity>
 
@@ -278,10 +278,16 @@
             console.log("Shared Screen !!");
 
             navigator.mediaDevices.getDisplayMedia({ audio: true, video: true }).then((stream) => {
-              let $videoElement = document.querySelector('video#screen');
-                $videoElement.srcObject = stream
-                $videoElement.onloadedmetadata = () => {
-                       $videoElement.play()
+
+              let videoElement = document.querySelector('video#screen');
+              videoElement.srcObject = stream
+              let videoTexture = new THREE.VideoTexture(videoElement);
+              const mesh = document.getElementById('a').getObject3D('mesh'); // 화면 mesh 설정 
+              mesh.material.map = videoTexture;
+              mesh.material.needsUpdate = true;
+
+              videoElement.onloadedmetadata = () => {
+                  videoElement.play()
               }
 
               NAF.connection.adapter.addLocalMediaStream(stream, "screen");
