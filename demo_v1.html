@@ -163,17 +163,10 @@
           <a-entity>
               <a-entity id="avatarhead" scale="2 2 2" gltf-model="url(https://cdn.glitch.me/80742858-b8eb-448a-83ae-391f410d322f/Monitor.gltf?v=1639597253645)" crossorigin="anonymous" networked-audio-source rotation="0 180 0">
                 <a-plane  color="white" position="0.0 0.17 0.12" scale="0.78 0.6 1.0" networked-video-source></a-plane>
-                <a-plane color="#FFF" width="2" height="1" position="0 1.5 -0.001" material="side: front" shared-screen-mesh="streamName: screen"></a-plane>
-                <a-plane color="#FFF" width="2" height="1" position="0 1.5 -0.001" material="side: back" shared-screen-mesh="streamName: screen"></a-plane>
+                <a-plane visible="false" color="#FFF" width="2" height="1" position="0 1.5 -0.001" material="side: front" shared-screen-mesh="streamName: screen"></a-plane>
+                <a-plane visible="false" color="#FFF" width="2" height="1" position="0 1.5 -0.001" material="side: back" shared-screen-mesh="streamName: screen"></a-plane>
               </a-entity>
             </a-entity>
-        </template>
-
-        <template id="shared-template">
-          <a-entity class="share">
-            <a-plane color="#FFF" width="5" height="3" position="0 0 0" material="side: back; color: red"></a-plane>
-            <a-plane color="#FFF" width="5" height="3" position="0 0 0" material="side: front" networked-video-source="streamName: screen"></a-plane>
-          </a-entity>
         </template>
       
         <!------------------------------------------------------------------------- Templates -------------------------------------------------------------->
@@ -196,30 +189,22 @@
 
       <!-- shared screen -->
       <a-entity>
-        <a-video
-          class="front"
+        <a-video  
           material="side:front"
           src="#screen"
-          width="5"
-          height="3"
-          position="-7 4 0"
+          width="10"
+          height="6"
+          position="-10 4 0"
         ></a-video>
         <a-plane
           id="a"
-          class="back"
           rotation="0 180 0"
           material= "side:front"
-          width="5"
-          height="3"
-          position="-7 4 0"
+          width="10"
+          height="6"
+          position="-10 4 0"
         ></a-plane>
       </a-entity>
-
-      <!-- <a-entity id="share" 
-        networked="template:#shared-template;attachTemplateToLocal:false;"
-        position="2 4 0">
-        <a-entity text="value: remote camera; align:center;" position="0 4 0" rotation="0 0 0" scale="8 8 8"></a-entity>
-      </a-entity> -->
 
       <!-- environmnet -->
       <a-entity position="0 0 0"
@@ -242,6 +227,7 @@
 
   
     <script>   
+
       // Camera status
       let cameraEnabled = true;
       // Camera button element
@@ -284,8 +270,8 @@
         screenBtnEle.addEventListener('click', function() {
 
           if (screenEnabled) {
-            window.location.reload()
-            // NAF.connection.adapter.removeLocalMediaStream("screen");
+            // window.location.reload()
+            NAF.connection.adapter.removeLocalMediaStream("screen");
             screenEnabled = false;
             screenBtnEle.textContent = 'ON';
           } else {
@@ -296,10 +282,9 @@
                 $videoElement.srcObject = stream
                 $videoElement.onloadedmetadata = () => {
                        $videoElement.play()
-                }
-                
+              }
+
               NAF.connection.adapter.addLocalMediaStream(stream, "screen");
-              console.log(NAF.connection.adapter.remoteClients.stream) // 나를 제외한 peerId
               screenEnabled = true;
               screenBtnEle.textContent = 'OFF';
             });

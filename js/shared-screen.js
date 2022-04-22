@@ -27,7 +27,8 @@ AFRAME.registerComponent('shared-screen-mesh', {
     },
   
     _setMediaStream(newStream) {    
-        console.log("_setMediaStream Call ~~") // ------------------!!
+      console.log("_setMediaStream Call ~~") // ------------------!!
+        
       if(!this.video) {
         this.setupVideo();
       }
@@ -55,6 +56,7 @@ AFRAME.registerComponent('shared-screen-mesh', {
           // const mesh = this.el.getObject3D('mesh');
           mesh.material.map = this.videoTexture;
           mesh.material.needsUpdate = true;
+
         }
   
         this.stream = newStream;
@@ -62,7 +64,7 @@ AFRAME.registerComponent('shared-screen-mesh', {
     },
   
     _clearMediaStream() {
-  
+      console.log("_clearMediaStream Call ~~")
       this.stream = null;
   
       if (this.videoTexture) {
