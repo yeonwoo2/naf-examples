@@ -1,4 +1,4 @@
-AFRAME.registerComponent('shared-screen-mesh', {
+var connection = AFRAME.registerComponent('shared-screen-mesh', {
 
     schema: {
       streamName: { default: 'video' },
